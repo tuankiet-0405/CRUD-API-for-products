@@ -3,6 +3,8 @@ const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/db');
 const productRoutes = require('./routes/products');
+const roleRoutes = require('./routes/roles');
+const userRoutes = require('./routes/users');
 
 const app = express();
 
@@ -16,18 +18,39 @@ connectDB();
 
 // Routes
 app.use('/api/products', productRoutes);
+app.use('/api/roles', roleRoutes);
+app.use('/api/users', userRoutes);
 
 // Health check route
 app.get('/', (req, res) => {
   res.status(200).json({
     success: true,
-    message: 'Products API is running',
+    message: 'CRUD API is running',
     endpoints: {
-      'POST /api/products': 'Create a new product',
-      'GET /api/products': 'Get all products',
-      'GET /api/products/:id': 'Get product by ID',
-      'PUT /api/products/:id': 'Update product',
-      'DELETE /api/products/:id': 'Delete product'
+      'Products API': {
+        'POST /api/products': 'Create a new product',
+        'GET /api/products': 'Get all products',
+        'GET /api/products/:id': 'Get product by ID',
+        'PUT /api/products/:id': 'Update product',
+        'DELETE /api/products/:id': 'Delete product'
+      },
+      'Roles API': {
+        'POST /api/roles': 'Create a new role',
+        'GET /api/roles': 'Get all roles',
+        'GET /api/roles/:id': 'Get role by ID',
+        'PUT /api/roles/:id': 'Update role',
+        'DELETE /api/roles/:id': 'Delete role (soft delete)'
+      },
+      'Users API': {
+        'POST /api/users': 'Create a new user',
+        'GET /api/users': 'Get all users (query params: username)',
+        'GET /api/users/:id': 'Get user by ID',
+        'PUT /api/users/:id': 'Update user',
+        'DELETE /api/users/:id': 'Delete user (soft delete)',
+        'POST /api/users/enable': 'Enable user (email, username required)',
+        'POST /api/users/disable': 'Disable user (email, username required)',
+        'GET /api/users/roles/:roleId/users': 'Get all users by role ID'
+      }
     }
   });
 });
